@@ -17,6 +17,7 @@ const main = async () => {
     // create an express server instance
     const app = express();
 
+    // create a new instance of Apollo Server
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers: [HelloResolver, PostResolver],
@@ -25,28 +26,17 @@ const main = async () => {
         context: () => ({ em: orm.em })
     });
 
+    // add express middleware to the server
     apolloServer.applyMiddleware({ app });
 
+    // listen to the port
+    // for debugging purpose
     app.listen(4000, () => {
         console.log('Server started on localhost:4000')
     });
-
-    /**
-        // creating a new post instance
-         const post = orm.em.create(Post, {title: 'My first post'});
-
-         // inserting the data in the database
-         await orm.em.persistAndFlush(post);
-     */
-
-    /**
-         // get all the posts
-         const posts = await orm.em.find(Post, {});
-
-         console.log(posts);
-     */
 };
 
+// call the main function and catch error if presents
 main().catch(err => {
     console.log(err);
 });
